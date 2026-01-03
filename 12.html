@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SECURITY BREACH</title>
+
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  background:black;
+  color:#00ff00;
+  font-family:monospace;
+  height:100%;
+  overflow:hidden;
+  cursor:none;
+}
+
+/* CRT scanlines */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.03),
+    rgba(255,255,255,0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events:none;
+}
+
+.screen{
+  padding:20px;
+  animation:flicker 0.08s infinite;
+}
+
+@keyframes flicker{
+  0%{opacity:1}
+  50%{opacity:.94}
+  100%{opacity:1}
+}
+
+h1{
+  color:red;
+  text-shadow:0 0 25px red;
+  animation:glitch .6s infinite;
+}
+
+@keyframes glitch{
+  0%{transform:none;text-shadow:2px 0 red}
+  25%{transform:translate(-2px,1px);text-shadow:-2px 0 cyan}
+  50%{transform:translate(2px,-1px)}
+  100%{transform:none}
+}
+
+.alert{
+  color:red;
+  font-size:18px;
+  animation:blink .35s infinite;
+}
+
+@keyframes blink{50%{opacity:0}}
+
+.terminal{
+  margin-top:14px;
+  white-space:pre-wrap;
+  font-size:14px;
+}
+
+.info{
+  margin-top:12px;
+  border-top:1px solid #022;
+  padding-top:8px;
+  font-size:13px;
+}
+
+.progress{
+  margin-top:12px;
+  width:100%;
+  background:#050505;
+  border:1px solid #0f0;
+}
+
+.bar{
+  height:10px;
+  width:0%;
+  background:linear-gradient(90deg,#0f0,#0ff);
+}
+
+.countdown{
+  margin-top:10px;
+  color:red;
+  font-size:22px;
+}
+
+.choice{
+  margin-top:14px;
+  color:red;
+  font-size:18px;
+}
+
+.footer{
+  position:absolute;
+  bottom:6px;
+  right:10px;
+  font-size:10px;
+  color:#033;
+}
+
+canvas{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+</style>
+</head>
+
+<body>
+<canvas id="matrix"></canvas>
+
+<div class="screen" id="screen">
+  <h1>⚠ CRITICAL SYSTEM BREACH ⚠</h1>
+  <div class="alert">USER INTERVENTION NOT ADVISED</div>
+
+  <div class="terminal" id="terminal"></div>
+  <div class="info" id="info"></div>
+
+  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="countdown" id="countdown"></div>
+  <div class="choice" id="choice"></div>
+
+  <div class="footer">kernel://observer-node</div>
+</div>
+
+<script>
+// fullscreen
+document.body.addEventListener("click",()=>{
+  document.documentElement.requestFullscreen?.();
+},{once:true});
+
+// matrix rain
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
+resize();addEventListener("resize",resize);
+
+const chars="01#@$%&*∆ΞΩ▓▒░";
+const cols=Math.floor(innerWidth/14);
+const drops=Array(cols).fill(1);
+
+setInterval(()=>{
+  ctx.fillStyle="rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#0f0";
+  ctx.font="14px monospace";
+  drops.forEach((y,i)=>{
+    const t=chars[Math.floor(Math.random()*chars.length)];
+    ctx.fillText(t,i*14,y*14);
+    drops[i]=y*14>canvas.height&&Math.random()>0.975?0:y+1;
+  });
+},33);
+
+// fake data
+const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const fakeIP=()=>`${rand(10,250)}.${rand(0,255)}.${rand(0,255)}.${rand(1,254)}`;
+
+const terminal=document.getElementById("terminal");
+const info=document.getElementById("info");
+const bar=document.getElementById("bar");
+const countdown=document.getElementById("countdown");
+const choice=document.getElementById("choice");
+
+// scary logs
+const logs=[
+"[BOOT] Shadow kernel injected",
+"[SCAN] Environment fingerprint extracted",
+"[TRACE] User identity correlation: 87%",
+"[DEVICE] Input channel mirrored",
+"[MEM] Browser entropy mapped",
+"[AI] Stress indicators rising",
+"[AI] You are reacting as expected",
+"[WARN] Exit attempts logged",
+"[SYS] User control degraded",
+"[FINAL] Observation mode enabled"
+];
+
+const infoBlock=`
+SESSION DATA (SIMULATED)
+IP ADDRESS : ${fakeIP()}
+DEVICE     : Generic Desktop / Mobile
+CPU LOAD   : ${rand(45,99)}%
+MEMORY MAP : EXPOSED
+NETWORK    : SESSION MIRRORED
+`;
+
+// typing logs
+let i=0,p=0;
+const logInt=setInterval(()=>{
+  if(i<logs.length){
+    terminal.innerHTML+=logs[i]+"\n";
+    p+=100/logs.length;
+    bar.style.width=p+"%";
+    if(Math.random()>0.7){
+      document.body.style.transform=
+        `translate(${rand(-3,3)}px,${rand(-3,3)}px)`;
+      setTimeout(()=>document.body.style.transform="none",60);
+    }
+    i++;
+  }else{
+    clearInterval(logInt);
+    info.textContent=infoBlock;
+  }
+},600);
+
+// extra scary random messages
+const scareLines=[
+"[AI] You are being analyzed",
+"[TRACE] Identity shadow created",
+"[SYS] This session is logged",
+"[WARN] Do not attempt to close",
+"[AI] We can see hesitation"
+];
+
+setInterval(()=>{
+  terminal.innerHTML+=scareLines[
+    Math.floor(Math.random()*scareLines.length)
+  ]+"\n";
+},3000);
+
+// countdown
+let t=10;
+const timer=setInterval(()=>{
+  if(t>0){
+    countdown.textContent="PROCESS WINDOW CLOSING IN: "+t;
+    document.body.style.background=t%2?"#200":"black";
+    t--;
+  }else{
+    clearInterval(timer);
+    countdown.textContent="STATE: NO RETURN";
+    choice.innerHTML="[ CONTINUE ]   [ DISCONNECT ]";
+    terminal.innerHTML+="\nYou should not have stayed this long.\nConnection remembered.\n";
+  }
+},1000);
+</script>
+</body>
+</html>
