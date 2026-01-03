@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SECURITY BREACH</title>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    color: #00ff00;
+    font-family: monospace;
+    height: 100%;
+    overflow: hidden;
+    cursor: none;
+}
+
+#terminal {
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 16px;
+}
+
+.blink {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+.warning {
+    color: red;
+    font-weight: bold;
+}
+
+.glitch {
+    text-shadow: 0 0 5px red, 0 0 10px green;
+}
+</style>
+</head>
+
+<body>
+<div id="terminal"></div>
+
+<script>
+const terminal = document.getElementById("terminal");
+
+const messages = [
+    "Initializing secure connection...",
+    "Connecting to remote host 192.168.0.1",
+    "Bypassing firewall...",
+    "Access granted ✔",
+    "Injecting payload...",
+    "Reading system files...",
+    "Downloading user data...",
+    "Decrypting passwords...",
+    "Uploading data to server...",
+    "⚠ WARNING: SYSTEM BREACH DETECTED ⚠",
+    "Tracking IP address...",
+    "IP FOUND: 103.45.21.***",
+    "Locating device...",
+    "DEVICE LOCATION CONFIRMED",
+    "Accessing webcam...",
+    "Accessing microphone...",
+    "You cannot stop this process.",
+    "System control: 87%",
+    "System control: 94%",
+    "System control: 100%",
+    "ALL DATA COMPROMISED.",
+    "Goodbye."
+];
+
+let index = 0;
+
+function typeMessage() {
+    if (index < messages.length) {
+        const line = document.createElement("div");
+        line.textContent = messages[index];
+
+        if (messages[index].includes("WARNING") || messages[index].includes("COMPROMISED")) {
+            line.classList.add("warning", "glitch");
+        }
+
+        terminal.appendChild(line);
+        window.scrollTo(0, document.body.scrollHeight);
+        index++;
+        setTimeout(typeMessage, Math.random() * 800 + 300);
+    } else {
+        const cursor = document.createElement("span");
+        cursor.textContent = "_";
+        cursor.classList.add("blink");
+        terminal.appendChild(cursor);
+    }
+}
+
+typeMessage();
+</script>
+</body>
+</html>
